@@ -1,32 +1,30 @@
-# Repositório de Projetos Acadêmicos - [Nome do Curso]
+# Repositório de Projetos Acadêmicos - Sistemas de Informação
 
-Este repositório serve como um portfólio digital dos trabalhos, projetos e exercícios desenvolvidos durante minha graduação em **[Nome do Seu Curso]** na **[Nome da Sua Faculdade]**.
+Este repositório serve como um portfólio digital dos trabalhos, projetos e exercícios desenvolvidos durante minha graduação em **Sistemas de Informação** no **Centro Universitário para o Desenvolvimento do Alto Vale do Itajaí - UNIDAVI**.
 
 ---
 
 ## 📚 Estrutura do Repositório
 
-Os projetos estão organizados por semestre ou por disciplina para facilitar a navegação. Cada pasta de projeto inclui o código-fonte, a documentação e, quando aplicável, relatórios ou apresentações.
+Os projetos estão organizados por **nome do curso** e pasta da aula, para facilitar a navegação.  
+Cada pasta de projeto inclui o código-fonte, a documentação e, quando aplicável, relatórios ou apresentações.
 
-- `/[Semestre 1 - Ex: 2024.1]`
-    - `/[Disciplina A]`
-        - `/[Nome do Projeto A]`
-    - `/[Disciplina B]`
-        - `/[Nome do Projeto B]`
-- `/[Semestre 2 - Ex: 2024.2]`
-    - `/[Disciplina C]`
-        - `/[Nome do Projeto C]`
+Exemplo de organização:
+
+- `/[Nome do Curso]`
+    - `/[aula01]`
+
 
 ---
 
 ## 🚀 Tecnologias Utilizadas
 
-Os projetos foram desenvolvidos utilizando diversas tecnologias, dependendo dos requisitos de cada disciplina. As principais incluem:
+Os projetos foram desenvolvidos utilizando as seguintes tecnologias:
 
-- **Linguagens de Programação:** `[Ex: Python, Java, C++, JavaScript]`
-- **Frameworks e Bibliotecas:** `[Ex: NumPy, Pandas, React, Spring Boot]`
-- **Bancos de Dados:** `[Ex: PostgreSQL, MongoDB, MySQL]`
-- **Ferramentas:** `[Ex: Docker, Git, Visual Studio Code]`
+- **Linguagens de Programação:** HTML, CSS, JavaScript, PHP
+- **Frameworks e Bibliotecas:** (nenhum até o momento, mas será estudado Laravel)
+- **Bancos de Dados:** (nenhum até o momento)
+- **Ferramentas:** VS Code, GitHub
 
 ---
 
@@ -34,12 +32,13 @@ Os projetos foram desenvolvidos utilizando diversas tecnologias, dependendo dos 
 
 Para mais informações sobre qualquer um dos projetos ou para entrar em contato:
 
-- **Nome:** [Seu Nome Completo]
-- **E-mail:** [Seu E-mail]
-- **LinkedIn:** [Link para o seu perfil no LinkedIn]
+- **Nome:** Lucas Gabriel Stopassolli
+- **E-mail:** lucasgstopassolli@gmail.com
+- **LinkedIn:** [linkedin.com/in/lucas-grabriel-stopassolli](https://www.linkedin.com/in/lucas-grabriel-stopassolli/)
 
 ---
 
 ## 📄 Licença
 
-Este repositório é para fins educacionais e de demonstração. O conteúdo é de autoria própria para os trabalhos da faculdade.
+Este repositório é licenciado sob a **Licença MIT**.  
+Você pode usar, copiar, modificar e distribuir este conteúdo, desde que mantenha o aviso de direitos autorais original e inclua a licença.
