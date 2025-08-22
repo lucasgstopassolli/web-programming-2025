@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Atividade 03</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <form action="cadastro.php" method="post" id="form-example">
+        <fieldset style="padding: 1.4rem; border-radius: 1rem;">
+            <legend>Formulário de Cadastro</legend>
+            <ul style="display: flex; flex-direction: column; gap: 0.8rem; list-style-type: '→  '; padding: 0 1rem;">
+                <li>
+                    <input placeholder="Nome" type="text" id="nome" name="nome" maxlength="100" required>
+                </li> 
+                <li>
+                    <input placeholder="Sobrenome" type="text" id="sobrenome" name="sobrenome" maxlength="100" required>
+           </li> 
+           <li>
+               <input placeholder="E-mail" type="email" id="email" name="email" required>
+            </li> 
+            <li>
+                <input label="Data de Nascimento" type="date" min="1920-01-01" max="2024-01-01" id="data-de-nascimento" name="data-de-nascimento">
+           </li> 
+           <li>
+               <div style="display: flex; align-items: center; gap: 0.2rem; max-width: 50%;">
+                   <input type="radio" id="masculino" name="sexo" value="masculino" />
+                   <label for="masculino">Masculino</label>
+                   <input type="radio" id="feminino" name="sexo" value="feminino" />
+                   <label for="feminino">Feminino</label>
+                </div>
+            </li> 
+            <li>
+                <input placeholder="Endereço" type="text" id="endereco" name="endereco" maxlength="200">
+            </li> 
+            <li>
+                <input placeholder="CEP" type="text" id="cep" name="cep" maxlength="10">
+            </li> 
+            <liwidth: 4rem;">
+                <input placeholder="Cor Favorita" type="color" id="cor-favorita" name="cor-favorita">
+            </li> 
+            <li>
+                <select id="estado" name="estado">
+                    <option value="" selected>Estado (UF)</option>
+                    <option value="AC">Acre</option>
+                    <option value="AL">Alagoas</option>
+                    <option value="AP">Amapá</option>
+                    <option value="AM">Amazonas</option>
+                    <option value="BA">Bahia</option>
+                    <option value="CE">Ceará</option>
+                    <option value="DF">Distrito Federal</option>
+                    <option value="ES">Espírito Santo</option>
+                    <option value="GO">Goiás</option>
+                    <option value="MA">Maranhão</option>
+                    <option value="MT">Mato Grosso</option>
+                    <option value="MS">Mato Grosso do Sul</option>
+                    <option value="MG">Minas Gerais</option>
+                    <option value="PA">Pará</option>
+                    <option value="PB">Paraíba</option>
+                   <option value="PR">Paraná</option>
+                   <option value="PE">Pernambuco</option>
+                   <option value="PI">Piauí</option>
+                   <option value="RJ">Rio de Janeiro</option>
+                   <option value="RN">Rio Grande do Norte</option>
+                   <option value="RS">Rio Grande do Sul</option>
+                   <option value="RO">Rondônia</option>
+                   <option value="RR">Roraima</option>
+                   <option value="SC">Santa Catarina</option>
+                   <option value="SP">São Paulo</option>
+                   <option value="SE">Sergipe</option>
+                   <option value="TO">Tocantins</option>
+                </select>
+            </li> 
+        </ul>
+    </fieldset>
+        
+        <div style="display: flex; justify-content: space-between; gap: 0.8rem;">
+            <button style="width: 50%" type="submit">Enviar</button>
+            <button style="width: 50%" type="reset">Limpar</button>
+        </div>
+    </form>
+</body>
+
+</html>
