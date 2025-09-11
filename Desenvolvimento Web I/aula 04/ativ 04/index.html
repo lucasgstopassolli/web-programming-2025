@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Atividade de JavaScript</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <fieldset>
+        <form action="POST">
+            <label for="user_field">Usuário:</label>
+            <input type="text" id="user_field" name="user_field" maxlength="40"
+            class="input" placeholder="tente user">
+            <label for="user_password">Senha:</label>
+            <input type="password" id="user_password" name="user_password" maxlength="40"
+            class="input" placeholder="tente pass">
+            
+            <button type="submit" onclick="formSubmit()">Login</button>
+        </form>
+    </fieldset>
+    <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,68 @@
+body{
+    width: 98%;
+    height: 95vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: Arial, Helvetica, sans-serif;
+}
+fieldset{
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    justify-content: center;
+    padding: 2.4rem 1.8rem;
+    border-radius: 1.2rem;
+    width: 20rem;
+    border: 1px solid #eee;
+    box-shadow: 0 0 8px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+}
+fieldset:hover{
+    box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+    transform: translateY(-4px);
+}
+
+fieldset label{
+    font-size: 1.2rem;
+}
+
+fieldset button{
+    width: 100%;
+    padding: 0.8rem;
+    font-size: 1.2rem;
+    border-radius: 0.4rem;
+    cursor: pointer;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    transition: all 0.3s ease;
+}
+
+
+fieldset input{
+    width: 100%;
+    margin-bottom: 0.8rem;
+    box-sizing: border-box;
+    padding: 0.4rem;
+    font-size: 1.4rem;
+    border-radius: 0.4rem;
+    border: 1px solid #ccc;
+    transition: all 0.3s ease;
+}
+
+fieldset button:hover{
+    background-color: #45a049;
+}
+fieldset input:focus{
+    border: 1px solid #4CAF50;
+    outline: none;
+    box-shadow: 0 0 8px rgba(76, 175, 80, 0.3);
+}
+fieldset button:active{
+    transform: scale(0.98);
+}
+fieldset .user_pass_fail{
+    background-color: #ffaeae!important;
+    border-color: rgb(246, 72, 72)!important;
+}

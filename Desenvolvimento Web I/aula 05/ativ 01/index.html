@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- calculadora onde informa dois elementos e escolhe as operações -->
+    <div class="container">
+        <h1>Calculadora Simples</h1>
+        <input type="number" id="num1" placeholder="Digite o primeiro número">
+        <input type="number" id="num2" placeholder="Digite o segundo número">
+        <select id="operation">
+            <option value="">Selecionar</option>
+            <option value="add">Adicionar</option>
+            <option value="subtract">Subtrair</option>
+            <option value="multiply">Multiplicar</option>
+            <option value="divide">Dividir</option>
+        </select>
+        <button id="calculateBtn">Calcular</button>
+        <br> 
+        <!-- Perdão, usei tag br porque eu não queria quebrar toda a div para jogar o input para baixo -->
+        <input type="text" id="result" placeholder="Resultado" readonly>
+    </div>
+    
+
+    <script src="script.js"></script>
+</body>
+</html>

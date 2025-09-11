@@ -1,0 +1,41 @@
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 97vh;
+  background-color: #f0f0f0;
+}
+.container {
+  background-color: white;
+  padding: 2rem;
+  border-radius: 0.8rem;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+input,
+select,
+button {
+  margin: 10px;
+  padding: 10px;
+  font-size: 16px;
+  border-radius: 0.8rem;
+  border: 1px solid #bbb;
+  background-color: white;
+}
+button {
+  cursor: pointer;
+  border-radius: 0.8rem;
+  border: 1px solid #bbb;
+}
+.positive-result{
+  background-color: rgb(175, 244, 175);
+  color: green;
+}
+.negative-result{
+  background-color: rgb(244, 175, 175);
+  color: red;
+}
+.zero-result{
+  background-color: rgb(107, 107, 107);
+  color: rgb(50, 50, 50);
+}
