@@ -1,9 +1,7 @@
 <?php
-require_once __DIR__ . '/../src/auth.php';
-require_once __DIR__ . '/../src/function.php';
-
-// Inicia a sessão para verificar o status de login ou processar um novo
-start_secure_session();
+session_start();
+require_once '../src/auth.php';
+require_once '../src/function.php';
 
 $error_message = '';
 
@@ -33,11 +31,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 // 3. Se o usuário ESTÁ LOGADO, mostra o painel de administração
 if (is_logged_in()) {
     
-    require_once __DIR__ . '/../src/report.php';
+    require_once '../src/report.php';
 
     // Lógica do Dashboard
     $sectors = get_all_sectors();
-    $selected_sector = filter_input(INPUT_GET, 'sector', FILTER_SANITIZE_STRING);
+    $selected_sector = isset($_GET['sector']) ? $_GET['sector'] : null;
 
     // Se um setor inválido for selecionado, trata como "Todos"
     if ($selected_sector && !in_array($selected_sector, $sectors)) {
@@ -49,13 +47,13 @@ if (is_logged_in()) {
     $text_feedbacks = get_text_feedbacks($selected_sector);
 
     // Prepara dados para o gráfico
-    $chart_labels = json_encode(array_map(fn($item) => $item['question_text'], $avg_scores));
-    $chart_data = json_encode(array_map(fn($item) => round($item['average_score'], 2), $avg_scores));
+    $chart_labels = json_encode(array_map(function($item) { return $item['question_text']; }, $avg_scores));
+    $chart_data = json_encode(array_map(function($item) { return round($item['average_score'], 2); }, $avg_scores));
 
     render_header('Painel Administrativo');
 ?>
     <h1>Painel Administrativo</h1>
-    <p class="lead">Bem-vindo, <?= sanitize_output($_SESSION['username']) ?>!</p>
+    <p class="lead">Bem-vindo, <?= htmlspecialchars($_SESSION['username']) ?>!</p>
     
     <?php include '_admin_nav.php'; ?>
 
@@ -72,8 +70,8 @@ if (is_logged_in()) {
                     <select name="sector" id="sector" class="form-select" onchange="this.form.submit()">
                         <option value="">-- Todos os Setores --</option>
                         <?php foreach ($sectors as $sector): ?>
-                            <option value="<?= sanitize_output($sector) ?>" <?= ($selected_sector === $sector) ? 'selected' : '' ?>>
-                                <?= sanitize_output($sector) ?>
+                            <option value="<?= htmlspecialchars($sector) ?>" <?= ($selected_sector === $sector) ? 'selected' : '' ?>>
+                                <?= htmlspecialchars($sector) ?>
                             </option>
                         <?php endforeach; ?>
                     </select>
@@ -125,9 +123,9 @@ if (is_logged_in()) {
                         <?php foreach ($text_feedbacks as $feedback): ?>
                         <tr>
                             <td><?= date('d/m/Y H:i', strtotime($feedback['created_at'])) ?></td>
-                            <td><?= sanitize_output($feedback['sector']) ?></td>
-                            <td><?= sanitize_output($feedback['device_name']) ?></td>
-                            <td><?= sanitize_output($feedback['answer_text']) ?></td>
+                            <td><?= htmlspecialchars($feedback['sector']) ?></td>
+                            <td><?= htmlspecialchars($feedback['device_name']) ?></td>
+                            <td><?= htmlspecialchars($feedback['answer_text']) ?></td>
                         </tr>
                         <?php endforeach; ?>
                     <?php endif; ?>
@@ -190,11 +188,11 @@ render_header('Login - Painel Administrativo');
                 
                 <?php if ($error_message): ?>
                     <div class="alert alert-danger" role="alert">
-                        <?= sanitize_output($error_message) ?>
+                        <?= htmlspecialchars($error_message) ?>
                     </div>
                 <?php endif; ?>
 
-                <form action="admin.php" method="POST" novalidate>
+                <form action="admin.php" method="POST">
                     <div class="mb-3">
                         <label for="username" class="form-label">Usuário</label>
                         <input type="text" class="form-control" id="username" name="username" required autofocus>

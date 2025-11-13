@@ -1,115 +1,72 @@
 <?php
 
-/**
- * Funções para autenticação e gerenciamento de sessão
- * para o painel administrativo.
- */
+require_once 'db.php';
 
-require_once __DIR__ . '/db.php';
-
-/**
- * Inicia a sessão de forma segura, se ainda não houver uma ativa.
- */
-function start_secure_session(): void
+// Verifica se o usuário está logado.
+function is_logged_in()
 {
-    if (session_status() === PHP_SESSION_NONE) {
-        // Configurações de segurança para o cookie da sessão
-        session_set_cookie_params([
-            'lifetime' => 0, // A sessão dura até o navegador ser fechado
-            'path' => '/',
-            'domain' => '', // Em produção, defina seu domínio ex: 'meusite.com'
-            'secure' => isset($_SERVER['HTTPS']), // Enviar cookie apenas em HTTPS
-            'httponly' => true, // Previne acesso ao cookie via JavaScript
-            'samesite' => 'Lax' // Mitigação contra ataques CSRF
-        ]);
-        session_start();
-    }
-}
-
-/**
- * Verifica se o usuário está autenticado na sessão.
- *
- * @return bool True se o usuário está logado, false caso contrário.
- */
-function is_logged_in(): bool
-{
-    start_secure_session();
-    // A autenticação é confirmada pela existência da variável de sessão 'user_id'
+    // A sessão deve ser iniciada no script que chama esta função.
     return isset($_SESSION['user_id']);
 }
 
-/**
- * Exige que o usuário esteja logado para acessar a página.
- * Se não estiver, redireciona para a página de login (`admin.php`).
- */
-function require_login(): void
+// Exige que o usuário esteja logado para acessar a página.
+function require_login()
 {
+    // Inicia a sessão se ainda não foi iniciada.
+    if (session_status() === PHP_SESSION_NONE) {
+        session_start();
+    }
+    
     if (!is_logged_in()) {
         header('Location: admin.php');
         exit;
     }
 }
 
-/**
- * Tenta realizar o login do usuário com as credenciais fornecidas.
- *
- * @param string $username O nome de usuário.
- * @param string $password A senha em texto plano.
- * @return bool True em caso de sucesso no login, false em caso de falha.
- */
-function login(string $username, string $password): bool
+// Tenta realizar o login do usuário.
+function login($username, $password)
 {
-    try {
-        $pdo = getDbConnection();
-        $stmt = $pdo->prepare("SELECT id, username, password FROM admin_users WHERE username = :username");
-        $stmt->execute([':username' => $username]);
-        $user = $stmt->fetch();
+    $db = getDbConnection();
+    $sql = "SELECT id, username, password FROM admin_users WHERE username = $1";
+    
+    $result = pg_query_params($db, $sql, [$username]);
 
-        // Verifica se o usuário foi encontrado e se a senha fornecida corresponde ao hash salvo
+    if ($result) {
+        $user = pg_fetch_assoc($result);
+
+        // Verifica se o usuário foi encontrado e se a senha corresponde ao hash.
         if ($user && password_verify($password, $user['password'])) {
-            start_secure_session();
+            // Inicia a sessão se ainda não foi iniciada.
+            if (session_status() === PHP_SESSION_NONE) {
+                session_start();
+            }
             
-            // Renova o ID da sessão para previnir ataques de fixação de sessão
-            session_regenerate_id(true);
-            
-            // Armazena os dados do usuário na sessão para uso futuro
+            // Armazena os dados do usuário na sessão.
             $_SESSION['user_id'] = $user['id'];
             $_SESSION['username'] = $user['username'];
             
             return true;
         }
-
-        return false; // Usuário ou senha incorretos
-
-    } catch (PDOException $e) {
-        error_log('Erro no processo de login: ' . $e->getMessage());
-        return false;
     }
+
+    return false; // Usuário ou senha incorretos.
 }
 
-/**
- * Realiza o logout do usuário, destruindo a sessão.
- */
-function logout(): void
+// Realiza o logout do usuário.
+function logout()
 {
-    start_secure_session();
-
-    // Limpa todas as variáveis da sessão
-    $_SESSION = [];
-
-    // Destrói o cookie da sessão no navegador
-    if (ini_get("session.use_cookies")) {
-        $params = session_get_cookie_params();
-        setcookie(session_name(), '', time() - 42000,
-            $params["path"], $params["domain"],
-            $params["secure"], $params["httponly"]
-        );
+    // Inicia a sessão se ainda não foi iniciada.
+    if (session_status() === PHP_SESSION_NONE) {
+        session_start();
     }
 
-    // Finalmente, destrói a sessão no servidor
+    // Limpa todas as variáveis da sessão.
+    $_SESSION = [];
+
+    // Destrói a sessão.
     session_destroy();
 
-    // Redireciona para a página de login
+    // Redireciona para a página de login.
     header('Location: admin.php');
     exit;
 }

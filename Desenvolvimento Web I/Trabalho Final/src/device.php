@@ -1,117 +1,51 @@
 <?php
 
-/**
- * Funções para manipulação dos dados de Dispositivos (CRUD).
- */
+require_once 'db.php';
 
-require_once __DIR__ . '/db.php';
-
-/**
- * Busca todos os dispositivos (ativos e inativos) para o painel de administração.
- * @return array
- */
-function get_all_devices(): array
+// Busca todos os dispositivos.
+function get_all_devices()
 {
-    try {
-        $pdo = getDbConnection();
-        $stmt = $pdo->query("
-            SELECT id, name, sector, status
-            FROM devices
-            ORDER BY sector ASC, name ASC
-        ");
-        return $stmt->fetchAll();
-    } catch (PDOException $e) {
-        error_log('Erro ao buscar todos os dispositivos: ' . $e->getMessage());
-        return [];
-    }
+    $db = getDbConnection();
+    $sql = "SELECT id, name, sector, status FROM devices ORDER BY sector ASC, name ASC";
+    $result = pg_query($db, $sql);
+    return pg_fetch_all($result) ?: [];
 }
 
-/**
- * Busca um único dispositivo pelo seu ID.
- * @param int $id
- * @return array|false
- */
-function get_device_by_id(int $id)
+// Busca um único dispositivo pelo seu ID.
+function get_device_by_id($id)
 {
-    try {
-        $pdo = getDbConnection();
-        $stmt = $pdo->prepare("SELECT * FROM devices WHERE id = :id");
-        $stmt->execute([':id' => $id]);
-        return $stmt->fetch();
-    } catch (PDOException $e) {
-        error_log("Erro ao buscar dispositivo por ID ($id): " . $e->getMessage());
-        return false;
-    }
+    $db = getDbConnection();
+    $sql = "SELECT * FROM devices WHERE id = $1";
+    $result = pg_query_params($db, $sql, [$id]);
+    return pg_fetch_assoc($result);
 }
 
-/**
- * Cria um novo dispositivo no banco de dados.
- * @param string $name
- * @param string $sector
- * @param bool $status
- * @return bool
- */
-function create_device(string $name, string $sector, bool $status): bool
+// Cria um novo dispositivo no banco de dados.
+function create_device($name, $sector, $status)
 {
-    try {
-        $pdo = getDbConnection();
-        $stmt = $pdo->prepare(
-            "INSERT INTO devices (name, sector, status) 
-             VALUES (:name, :sector, :status)"
-        );
-        return $stmt->execute([
-            ':name' => $name,
-            ':sector' => $sector,
-            ':status' => $status,
-        ]);
-    } catch (PDOException $e) {
-        error_log("Erro ao criar dispositivo: " . $e->getMessage());
-        return false;
-    }
+    $db = getDbConnection();
+    $sql = "INSERT INTO devices (name, sector, status) VALUES ($1, $2, $3)";
+    // O status vem como 'on' ou não vem. Convertemos para booleano.
+    $status_bool = $status ? 'true' : 'false';
+    $result = pg_query_params($db, $sql, [$name, $sector, $status_bool]);
+    return (bool)$result;
 }
 
-/**
- * Atualiza um dispositivo existente.
- * @param int $id
- * @param string $name
- * @param string $sector
- * @param bool $status
- * @return bool
- */
-function update_device(int $id, string $name, string $sector, bool $status): bool
+// Atualiza um dispositivo existente.
+function update_device($id, $name, $sector, $status)
 {
-    try {
-        $pdo = getDbConnection();
-        $stmt = $pdo->prepare(
-            "UPDATE devices 
-             SET name = :name, sector = :sector, status = :status 
-             WHERE id = :id"
-        );
-        return $stmt->execute([
-            ':id' => $id,
-            ':name' => $name,
-            ':sector' => $sector,
-            ':status' => $status,
-        ]);
-    } catch (PDOException $e) {
-        error_log("Erro ao atualizar dispositivo ($id): " . $e->getMessage());
-        return false;
-    }
+    $db = getDbConnection();
+    $sql = "UPDATE devices SET name = $1, sector = $2, status = $3 WHERE id = $4";
+    $status_bool = $status ? 'true' : 'false';
+    $result = pg_query_params($db, $sql, [$name, $sector, $status_bool, $id]);
+    return (bool)$result;
 }
 
-/**
- * Deleta um dispositivo do banco de dados.
- * @param int $id
- * @return bool
- */
-function delete_device(int $id): bool
+// Deleta um dispositivo do banco de dados.
+function delete_device($id)
 {
-    try {
-        $pdo = getDbConnection();
-        $stmt = $pdo->prepare("DELETE FROM devices WHERE id = :id");
-        return $stmt->execute([':id' => $id]);
-    } catch (PDOException $e) {
-        error_log("Erro ao deletar dispositivo ($id): " . $e->getMessage());
-        return false;
-    }
+    $db = getDbConnection();
+    $sql = "DELETE FROM devices WHERE id = $1";
+    $result = pg_query_params($db, $sql, [$id]);
+    return (bool)$result;
 }

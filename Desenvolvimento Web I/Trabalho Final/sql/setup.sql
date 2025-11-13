@@ -47,11 +47,6 @@ CREATE TABLE evaluations (
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
--- --- DADOS DE EXEMPLO ---
-
--- Inserir um usuário administrador padrão para o primeiro acesso
--- Senha: 'admin' (O hash foi gerado com password_hash('admin', PASSWORD_DEFAULT))
-INSERT INTO admin_users (username, password) VALUES ('admin', '$2y$10$N.7AV2jMSyE0sE5cZk2X/e2T.BFso2.0/N5x5b13dTxm2Toz1K.a2');
 
 -- Inserir algumas perguntas de exemplo
 INSERT INTO questions (question_text, display_order) VALUES ('Qual a probabilidade de você nos recomendar a um amigo ou familiar?', 1);
@@ -62,5 +57,3 @@ INSERT INTO questions (question_text, question_type, display_order) VALUES ('Dei
 -- Inserir um dispositivo de exemplo
 INSERT INTO devices (name, sector) VALUES ('Tablet Recepção 01', 'Recepção');
 
--- Mensagem de sucesso
-\echo 'Banco de dados configurado com sucesso com dados de exemplo.'

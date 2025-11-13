@@ -1,31 +1,30 @@
 <?php
-require_once __DIR__ . '/../src/auth.php';
-require_once __DIR__ . '/../src/function.php';
-require_once __DIR__ . '/../src/question.php';
+require_once '../src/auth.php';
+require_once '../src/function.php';
+require_once '../src/question.php';
 
 // 1. Protege a página: apenas usuários logados podem acessar.
 require_login();
 
 // 2. Lógica do Controller: processa as ações de CRUD
-$action = $_GET['action'] ?? 'list';
-$id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
+$action = isset($_GET['action']) ? $_GET['action'] : 'list';
+$id = isset($_GET['id']) ? (int)$_GET['id'] : null;
 
 $feedback_message = '';
 $feedback_type = '';
 
-try {
-    // Processa o envio de um formulário (Criação ou Atualização)
-    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        $id = filter_input(INPUT_POST, 'id', FILTER_VALIDATE_INT);
-        $text = $_POST['question_text'] ?? '';
-        $type = $_POST['question_type'] ?? 'scale';
-        $order = filter_input(INPUT_POST, 'display_order', FILTER_VALIDATE_INT) ?? 0;
-        $status = isset($_POST['status']); // true se o checkbox estiver marcado, false caso contrário
+// Processa o envio de um formulário (Criação ou Atualização)
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $id = isset($_POST['id']) ? (int)$_POST['id'] : null;
+    $text = isset($_POST['question_text']) ? $_POST['question_text'] : '';
+    $type = isset($_POST['question_type']) ? $_POST['question_type'] : 'scale';
+    $order = isset($_POST['display_order']) ? (int)$_POST['display_order'] : 0;
+    $status = isset($_POST['status']); // true se o checkbox estiver marcado, false caso contrário
 
-        if (empty($text)) {
-            throw new Exception('O texto da pergunta não pode estar vazio.');
-        }
-
+    if (empty($text)) {
+        $feedback_message = 'O texto da pergunta não pode estar vazio.';
+        $feedback_type = 'danger';
+    } else {
         if ($id) { // Se tem ID, é uma atualização
             $success = update_question($id, $text, $type, $order, $status);
             $feedback_message = $success ? 'Pergunta atualizada com sucesso!' : 'Erro ao atualizar a pergunta.';
@@ -36,17 +35,14 @@ try {
         $feedback_type = $success ? 'success' : 'danger';
         $action = 'list'; // Volta para a listagem após a ação
     }
+}
 
-    // Processa a ação de deletar
-    if ($action === 'delete' && $id) {
-        $success = delete_question($id);
-        $feedback_message = $success ? 'Pergunta deletada com sucesso!' : 'Erro ao deletar a pergunta. Verifique se ela não está em uso.';
-        $feedback_type = $success ? 'success' : 'danger';
-        $action = 'list'; // Volta para a listagem
-    }
-} catch (Exception $e) {
-    $feedback_message = $e->getMessage();
-    $feedback_type = 'danger';
+// Processa a ação de deletar
+if ($action === 'delete' && $id) {
+    $success = delete_question($id);
+    $feedback_message = $success ? 'Pergunta deletada com sucesso!' : 'Erro ao deletar a pergunta. Verifique se ela não está em uso.';
+    $feedback_type = $success ? 'success' : 'danger';
+    $action = 'list'; // Volta para a listagem
 }
 
 // 3. Prepara os dados para a View
@@ -65,7 +61,7 @@ render_header('Gerenciar Perguntas');
 
 <?php if ($feedback_message): ?>
 <div class="alert alert-<?= $feedback_type ?> alert-dismissible fade show" role="alert">
-    <?= sanitize_output($feedback_message) ?>
+    <?= htmlspecialchars($feedback_message) ?>
     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 </div>
 <?php endif; ?>
@@ -79,7 +75,7 @@ render_header('Gerenciar Perguntas');
             
             <div class="mb-3">
                 <label for="question_text" class="form-label">Texto da Pergunta</label>
-                <textarea class="form-control" id="question_text" name="question_text" rows="3" required><?= sanitize_output($question_to_edit['question_text'] ?? '') ?></textarea>
+                <textarea class="form-control" id="question_text" name="question_text" rows="3" required><?= htmlspecialchars($question_to_edit['question_text'] ?? '') ?></textarea>
             </div>
 
             <div class="row">
@@ -130,8 +126,8 @@ render_header('Gerenciar Perguntas');
                 <?php else: ?>
                     <?php foreach ($questions as $question): ?>
                     <tr>
-                        <td class="text-center"><?= sanitize_output($question['display_order']) ?></td>
-                        <td><?= sanitize_output($question['question_text']) ?></td>
+                        <td class="text-center"><?= htmlspecialchars($question['display_order']) ?></td>
+                        <td><?= htmlspecialchars($question['question_text']) ?></td>
                         <td><?= $question['question_type'] === 'scale' ? 'Escala' : 'Texto' ?></td>
                         <td class="text-center">
                             <span class="badge <?= $question['status'] ? 'bg-success' : 'bg-secondary' ?>">

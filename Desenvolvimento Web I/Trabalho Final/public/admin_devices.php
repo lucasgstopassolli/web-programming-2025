@@ -1,29 +1,29 @@
 <?php
-require_once __DIR__ . '/../src/auth.php';
-require_once __DIR__ . '/../src/function.php';
-require_once __DIR__ . '/../src/device.php';
+require_once '../src/auth.php';
+require_once '../src/function.php';
+require_once '../src/device.php';
 
 // 1. Protege a página
 require_login();
 
 // 2. Controller: processa as ações
-$action = $_GET['action'] ?? 'list';
-$id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
+$action = isset($_GET['action']) ? $_GET['action'] : 'list';
+$id = isset($_GET['id']) ? (int)$_GET['id'] : null;
 
 $feedback_message = '';
 $feedback_type = '';
 
-try {
-    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        $id = filter_input(INPUT_POST, 'id', FILTER_VALIDATE_INT);
-        $name = $_POST['name'] ?? '';
-        $sector = $_POST['sector'] ?? '';
-        $status = isset($_POST['status']);
+// Processa o envio de um formulário (Criação ou Atualização)
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $id = isset($_POST['id']) ? (int)$_POST['id'] : null;
+    $name = isset($_POST['name']) ? $_POST['name'] : '';
+    $sector = isset($_POST['sector']) ? $_POST['sector'] : '';
+    $status = isset($_POST['status']);
 
-        if (empty($name) || empty($sector)) {
-            throw new Exception('O nome e o setor do dispositivo são obrigatórios.');
-        }
-
+    if (empty($name) || empty($sector)) {
+        $feedback_message = 'O nome e o setor do dispositivo são obrigatórios.';
+        $feedback_type = 'danger';
+    } else {
         if ($id) { // Update
             $success = update_device($id, $name, $sector, $status);
             $feedback_message = $success ? 'Dispositivo atualizado com sucesso!' : 'Erro ao atualizar o dispositivo.';
@@ -34,17 +34,16 @@ try {
         $feedback_type = $success ? 'success' : 'danger';
         $action = 'list';
     }
-
-    if ($action === 'delete' && $id) {
-        $success = delete_device($id);
-        $feedback_message = $success ? 'Dispositivo deletado com sucesso!' : 'Erro ao deletar o dispositivo.';
-        $feedback_type = $success ? 'success' : 'danger';
-        $action = 'list';
-    }
-} catch (Exception $e) {
-    $feedback_message = $e->getMessage();
-    $feedback_type = 'danger';
 }
+
+// Processa a ação de deletar
+if ($action === 'delete' && $id) {
+    $success = delete_device($id);
+    $feedback_message = $success ? 'Dispositivo deletado com sucesso!' : 'Erro ao deletar o dispositivo.';
+    $feedback_type = $success ? 'success' : 'danger';
+    $action = 'list';
+}
+
 
 // 3. View: Prepara os dados
 $devices = get_all_devices();
@@ -62,7 +61,7 @@ render_header('Gerenciar Dispositivos');
 
 <?php if ($feedback_message): ?>
 <div class="alert alert-<?= $feedback_type ?> alert-dismissible fade show" role="alert">
-    <?= sanitize_output($feedback_message) ?>
+    <?= htmlspecialchars($feedback_message) ?>
     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 </div>
 <?php endif; ?>
@@ -77,12 +76,12 @@ render_header('Gerenciar Dispositivos');
             <div class="row">
                 <div class="col-md-6 mb-3">
                     <label for="name" class="form-label">Nome do Dispositivo</label>
-                    <input type="text" class="form-control" id="name" name="name" value="<?= sanitize_output($device_to_edit['name'] ?? '') ?>" required>
+                    <input type="text" class="form-control" id="name" name="name" value="<?= htmlspecialchars($device_to_edit['name'] ?? '') ?>" required>
                     <div class="form-text">Ex: "Tablet Recepção 01", "Totem Vendas"</div>
                 </div>
                 <div class="col-md-6 mb-3">
                     <label for="sector" class="form-label">Setor</label>
-                    <input type="text" class="form-control" id="sector" name="sector" value="<?= sanitize_output($device_to_edit['sector'] ?? '') ?>" required>
+                    <input type="text" class="form-control" id="sector" name="sector" value="<?= htmlspecialchars($device_to_edit['sector'] ?? '') ?>" required>
                     <div class="form-text">Ex: "Recepção", "Vendas", "Caixa"</div>
                 </div>
             </div>
@@ -124,8 +123,8 @@ render_header('Gerenciar Dispositivos');
                     <?php foreach ($devices as $device): ?>
                     <tr>
                         <td><?= $device['id'] ?></td>
-                        <td><?= sanitize_output($device['name']) ?></td>
-                        <td><?= sanitize_output($device['sector']) ?></td>
+                        <td><?= htmlspecialchars($device['name']) ?></td>
+                        <td><?= htmlspecialchars($device['sector']) ?></td>
                         <td class="text-center">
                             <span class="badge <?= $device['status'] ? 'bg-success' : 'bg-secondary' ?>">
                                 <?= $device['status'] ? 'Ativo' : 'Inativo' ?>

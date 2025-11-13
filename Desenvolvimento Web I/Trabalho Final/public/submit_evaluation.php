@@ -7,12 +7,12 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit;
 }
 
-require_once __DIR__ . '/../src/answer.php';
-require_once __DIR__ . '/../src/function.php'; // Para usar as funções de renderização em caso de erro
+require_once '../src/answer.php';
+require_once '../src/function.php'; // Para usar as funções de renderização em caso de erro
 
 // Filtra e valida os dados recebidos do formulário
-$device_id = filter_input(INPUT_POST, 'device_id', FILTER_VALIDATE_INT);
-$answers = $_POST['answers'] ?? []; // Usa o operador de coalescência nula para evitar erros se 'answers' não for enviado
+$device_id = isset($_POST['device_id']) ? (int)$_POST['device_id'] : null;
+$answers = isset($_POST['answers']) ? $_POST['answers'] : []; // Usa o operador de coalescência nula para evitar erros se 'answers' não for enviado
 
 // Verifica se os dados essenciais (ID do dispositivo e as respostas) estão presentes
 if (!$device_id || empty($answers)) {

@@ -1,8 +1,8 @@
 <?php
-require_once __DIR__ . '/../src/function.php';
+require_once '../src/function.php';
 
 // Tenta obter o ID do dispositivo da URL para o redirecionamento
-$device_id = filter_input(INPUT_GET, 'device', FILTER_VALIDATE_INT);
+$device_id = isset($_GET['device']) ? (int)$_GET['device'] : null;
 $redirect_url = 'index.php' . ($device_id ? '?device=' . $device_id : '');
 
 render_header('Obrigado!');

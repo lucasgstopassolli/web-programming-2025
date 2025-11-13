@@ -1,10 +1,10 @@
 <?php
-require_once __DIR__ . '/../src/function.php';
-require_once __DIR__ . '/../src/question.php';
+require_once '../src/function.php';
+require_once '../src/question.php';
 
 // É crucial obter o ID do dispositivo pela URL para saber de onde a avaliação está vindo.
 // Exemplo de uso: http://seu-site.com/index.php?device=1
-$device_id = filter_input(INPUT_GET, 'device', FILTER_VALIDATE_INT);
+$device_id = isset($_GET['device']) ? (int)$_GET['device'] : null;
 
 // Se nenhum ID de dispositivo for fornecido, a avaliação não pode continuar.
 if (!$device_id) {
@@ -31,7 +31,7 @@ render_header('Avaliação de Satisfação');
 <!-- O formulário engloba todo o carrossel -->
 <form action="submit_evaluation.php" method="POST" id="survey-form">
     <!-- Campo oculto para enviar o ID do dispositivo junto com as respostas -->
-    <input type="hidden" name="device_id" value="<?= sanitize_output($device_id) ?>">
+    <input type="hidden" name="device_id" value="<?= htmlspecialchars($device_id) ?>">
 
     <div id="question-slider" class="splide" aria-label="Formulário de Avaliação">
         <div class="splide__track">
@@ -40,7 +40,7 @@ render_header('Avaliação de Satisfação');
                 <?php foreach ($questions as $question): ?>
                 <li class="splide__slide">
                     <div class="question-container text-center p-md-5 p-3">
-                        <h2 class="h4 mb-4"><?= sanitize_output($question['question_text']) ?></h2>
+                        <h2 class="h4 mb-4"><?= htmlspecialchars($question['question_text']) ?></h2>
                         
                         <?php if ($question['question_type'] === 'scale'): ?>
                             <div class="scale-container">
