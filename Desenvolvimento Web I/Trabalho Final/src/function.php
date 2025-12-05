@@ -1,9 +1,7 @@
 <?php
 
-// Inclui as configurações da aplicação.
 require_once '../config.php';
 
-// Renderiza o cabeçalho padrão da página HTML.
 function render_header($pageTitle = APP_NAME)
 {
     $title = htmlspecialchars($pageTitle);
@@ -15,23 +13,19 @@ function render_header($pageTitle = APP_NAME)
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{$title}</title>
-    
-    <!-- Bibliotecas CSS -->
     <link rel="stylesheet" href="css/library/bootstrap.min.css">
     <link rel="stylesheet" href="css/library/splide.min.css">
-    
-    <!-- Estilos personalizados -->
     <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
-<div class="container mt-4">
+<div class="container d-flex flex-column py-5 min-h-100">
 HTML;
 }
 
-// Renderiza o rodapé padrão da página HTML.
-function render_footer($showAnonymityNotice = false)
+function render_footer($options = [])
 {
-    echo '</div>'; // Fecha o .container principal
+    $showAnonymityNotice = $options['showAnonymityNotice'] ?? false;
+    $pageType = $options['pageType'] ?? 'public';
 
     if ($showAnonymityNotice) {
         echo <<<HTML
@@ -40,15 +34,19 @@ function render_footer($showAnonymityNotice = false)
 </footer>
 HTML;
     }
+    echo '</div>';
+    
+    echo '<script src="js/library/bootstrap.bundle.min.js"></script>';
+
+    if ($pageType === 'public') {
+        echo <<<HTML
+<script src="js/library/splide.min.js"></script>
+<script src="js/scripts.js"></script>
+<script src="js/evaluation.js"></script>
+HTML;
+    }
 
     echo <<<HTML
-<!-- Bibliotecas JS -->
-<script src="js/library/bootstrap.bundle.min.js"></script>
-<script src="js/library/splide.min.js"></script>
-
-<!-- Scripts personalizados -->
-<script src="js/scripts.js"></script>
-
 </body>
 </html>
 HTML;

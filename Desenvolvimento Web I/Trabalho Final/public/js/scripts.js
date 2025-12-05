@@ -2,49 +2,80 @@
 
 document.addEventListener('DOMContentLoaded', function () {
     const slider = document.getElementById('question-slider');
+    const prevBtn = document.getElementById('slider-prev-btn');
+    const nextBtn = document.getElementById('slider-next-btn');
+    const form = document.getElementById('survey-form');
 
-    // Verifica se o elemento do carrossel existe na página
-    if (slider) {
-        // Inicializa o Splide com configurações específicas para o formulário
+    if (slider && prevBtn && nextBtn && form) {
         const splide = new Splide(slider, {
-            type: 'slide',       // Comportamento de slide padrão (não é um loop)
-            rewind: false,       // Não volta para o primeiro slide ao chegar no fim
-            perPage: 1,          // Mostra um slide por vez
-            pagination: true,    // Mostra os pontinhos de navegação na parte inferior
-            arrows: true,        // Mostra as setas de avançar/voltar
-            drag: true,          // Permite arrastar com o mouse ou o dedo (touch)
-            
-            // Impede que o gesto de arrastar comece em cima de botões ou campos de texto,
-            // evitando conflitos de interação.
-            noDrag: 'input, textarea, .btn-group', 
+            direction: 'ttb', 
+            rewind: true,
+            perPage: 1,
+            pagination: false,
+            arrows: false,
+            drag: false,
+            height: '40vh',
+            wheel: false,
+            noDrag: 'input, textarea, .btn-group',
         });
 
-        // Ouve o evento 'move' para fazer ajustes dinâmicos
-        splide.on('move', (newIndex, oldIndex, destIndex) => {
-            const form = document.getElementById('survey-form');
-            const slide = splide.Components.Slides.getAt(oldIndex).slide;
+        // Função para validar o slide atual
+        function validateCurrentSlide() {
+            const currentIndex = splide.index;
+            const currentSlide = splide.Components.Slides.getAt(currentIndex).slide;
+            const requiredInput = currentSlide.querySelector('input[type="radio"][required]');
+
+            if (requiredInput) {
+                const inputName = requiredInput.name;
+                if (!form.querySelector(`input[name="${inputName}"]:checked`)) {
+                    // Aplica a animação de "shake" para feedback visual
+                    const questionContainer = currentSlide.querySelector('.question-container');
+                    if (questionContainer) {
+                        questionContainer.classList.add('shake');
+                        setTimeout(() => questionContainer.classList.remove('shake'), 500);
+                    }
+                    return false; // Validação falhou
+                }
+            }
+            return true; // Validação passou ou não há inputs obrigatórios
+        }
+
+        // Controla a visibilidade dos botões
+        function updateNavButtons() {
+            const currentIndex = splide.index;
+            const totalSlides = splide.length;
+
+            // Botão Voltar
+            prevBtn.style.display = (currentIndex === 0) ? 'none' : 'inline-block';
             
-            // Encontra o input de rádio obrigatório no slide anterior
-            const requiredInput = slide.querySelector('input[type="radio"][required]');
-            
-            // Se existe um rádio obrigatório e ele não foi marcado, impede o avanço
-            if (requiredInput && !form.querySelector(`input[name="${requiredInput.name}"]:checked`)) {
-                // Previne o movimento
-                splide.go(oldIndex); 
-                
-                // (Opcional) Adiciona um feedback visual
-                const questionContainer = slide.querySelector('.question-container');
-                questionContainer.classList.add('shake');
-                setTimeout(() => questionContainer.classList.remove('shake'), 500);
+            // Botão Avançar
+            nextBtn.style.display = (currentIndex === totalSlides - 1) ? 'none' : 'inline-block';
+        }
+
+        // Evento do botão Avançar
+        nextBtn.addEventListener('click', function () {
+            if (validateCurrentSlide()) {
+                splide.go('+1');
             }
         });
 
-        // Monta e renderiza o carrossel
+        // Evento do botão Voltar
+        prevBtn.addEventListener('click', function () {
+            splide.go('-1');
+        });
+
+        // Ouve o evento 'moved' para atualizar os botões após o movimento
+        splide.on('moved', function () {
+            updateNavButtons();
+        });
+
+        // Monta o carrossel e atualiza os botões na inicialização
         splide.mount();
+        updateNavButtons();
     }
 });
 
-// Adiciona uma pequena animação de "shake" para o feedback de validação
+// Adiciona a animação de "shake" para o feedback de validação
 const style = document.createElement('style');
 style.innerHTML = `
 @keyframes shake {

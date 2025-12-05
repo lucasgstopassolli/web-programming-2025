@@ -68,17 +68,3 @@ function get_text_feedbacks($sector = null)
     $result = pg_query_params($db, $sql, $params);
     return pg_fetch_all($result) ?: [];
 }
-
-// Busca uma lista de todos os setores distintos que estão cadastrados nos dispositivos.
-function get_all_sectors()
-{
-    $db = getDbConnection();
-    $sql = "SELECT DISTINCT sector FROM devices WHERE status = true ORDER BY sector ASC";
-    $result = pg_query($db, $sql);
-    // pg_fetch_all com PDO::FETCH_COLUMN não existe, então fazemos manualmente
-    $sectors = [];
-    while ($row = pg_fetch_assoc($result)) {
-        $sectors[] = $row['sector'];
-    }
-    return $sectors;
-}

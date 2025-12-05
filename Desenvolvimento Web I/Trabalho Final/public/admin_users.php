@@ -146,5 +146,5 @@ render_header('Gerenciar Usuários');
 </div>
 
 <?php
-render_footer();
+render_footer(['pageType' => 'admin']);
 ?>

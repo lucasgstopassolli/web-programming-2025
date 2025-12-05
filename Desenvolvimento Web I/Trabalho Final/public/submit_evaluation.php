@@ -1,6 +1,5 @@
 <?php
 
-// Garante que o script só seja executado em requisições do tipo POST.
 // Se alguém tentar acessar este arquivo diretamente pela URL, será redirecionado.
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     header('Location: index.php');
@@ -12,13 +11,13 @@ require_once '../src/function.php'; // Para usar as funções de renderização 
 
 // Filtra e valida os dados recebidos do formulário
 $device_id = isset($_POST['device_id']) ? (int)$_POST['device_id'] : null;
-$answers = isset($_POST['answers']) ? $_POST['answers'] : []; // Usa o operador de coalescência nula para evitar erros se 'answers' não for enviado
+$answers = isset($_POST['answers']) ? $_POST['answers'] : [];
 
 // Verifica se os dados essenciais (ID do dispositivo e as respostas) estão presentes
 if (!$device_id || empty($answers)) {
     render_header('Erro de Submissão');
     echo '<div class="alert alert-warning text-center">Não foi possível processar sua avaliação. Dados inválidos ou ausentes.</div>';
-    render_footer();
+    render_footer(['pageType' => 'public']);
     exit;
 }
 
@@ -34,6 +33,6 @@ if ($success) {
     // Se falhou, exibe uma mensagem de erro genérica
     render_header('Erro ao Salvar');
     echo '<div class="alert alert-danger text-center">Ocorreu um erro inesperado ao salvar sua avaliação. Por favor, tente novamente.</div>';
-    render_footer();
+    render_footer(['pageType' => 'public']);
     exit;
 }

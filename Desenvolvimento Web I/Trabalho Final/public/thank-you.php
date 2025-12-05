@@ -44,5 +44,5 @@ render_header('Obrigado!');
 </script>
 
 <?php
-render_footer();
+render_footer(['pageType' => 'public']);
 ?>

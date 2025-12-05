@@ -2,7 +2,6 @@
 
 require_once 'db.php';
 
-// Busca todos os dispositivos.
 function get_all_devices()
 {
     $db = getDbConnection();
@@ -11,7 +10,6 @@ function get_all_devices()
     return pg_fetch_all($result) ?: [];
 }
 
-// Busca um único dispositivo pelo seu ID.
 function get_device_by_id($id)
 {
     $db = getDbConnection();
@@ -20,18 +18,15 @@ function get_device_by_id($id)
     return pg_fetch_assoc($result);
 }
 
-// Cria um novo dispositivo no banco de dados.
 function create_device($name, $sector, $status)
 {
     $db = getDbConnection();
     $sql = "INSERT INTO devices (name, sector, status) VALUES ($1, $2, $3)";
-    // O status vem como 'on' ou não vem. Convertemos para booleano.
     $status_bool = $status ? 'true' : 'false';
     $result = pg_query_params($db, $sql, [$name, $sector, $status_bool]);
     return (bool)$result;
 }
 
-// Atualiza um dispositivo existente.
 function update_device($id, $name, $sector, $status)
 {
     $db = getDbConnection();
@@ -41,11 +36,24 @@ function update_device($id, $name, $sector, $status)
     return (bool)$result;
 }
 
-// Deleta um dispositivo do banco de dados.
 function delete_device($id)
 {
     $db = getDbConnection();
     $sql = "DELETE FROM devices WHERE id = $1";
     $result = pg_query_params($db, $sql, [$id]);
     return (bool)$result;
+}
+
+// Busca uma lista de todos os setores distintos que estão cadastrados nos dispositivos.
+function get_all_sectors()
+{
+    $db = getDbConnection();
+    $sql = "SELECT DISTINCT sector FROM devices WHERE status = true ORDER BY sector ASC";
+    $result = pg_query($db, $sql);
+    // pg_fetch_all com PDO::FETCH_COLUMN não existe, então fazemos manualmente
+    $sectors = [];
+    while ($row = pg_fetch_assoc($result)) {
+        $sectors[] = $row['sector'];
+    }
+    return $sectors;
 }

@@ -5,14 +5,12 @@ require_once '../src/function.php';
 
 $error_message = '';
 
-// --- LÓGICA DE CONTROLE ---
-
-// 1. Processa a ação de logout
+// Processa a ação de logout
 if (isset($_GET['action']) && $_GET['action'] === 'logout') {
     logout();
 }
 
-// 2. Processa a tentativa de login
+// Processa a tentativa de login
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $username = $_POST['username'] ?? '';
     $password = $_POST['password'] ?? '';
@@ -26,12 +24,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-// --- RENDERIZAÇÃO DA PÁGINA ---
-
-// 3. Se o usuário ESTÁ LOGADO, mostra o painel de administração
+// Se o usuário ESTÁ LOGADO, mostra o painel de administração
 if (is_logged_in()) {
     
     require_once '../src/report.php';
+    require_once '../src/device.php';
 
     // Lógica do Dashboard
     $sectors = get_all_sectors();
@@ -46,9 +43,7 @@ if (is_logged_in()) {
     $avg_scores = get_average_scores_per_question($selected_sector);
     $text_feedbacks = get_text_feedbacks($selected_sector);
 
-    // Prepara dados para o gráfico
-    $chart_labels = json_encode(array_map(function($item) { return $item['question_text']; }, $avg_scores));
-    $chart_data = json_encode(array_map(function($item) { return round($item['average_score'], 2); }, $avg_scores));
+
 
     render_header('Painel Administrativo');
 ?>
@@ -57,51 +52,7 @@ if (is_logged_in()) {
     
     <?php include '_admin_nav.php'; ?>
 
-    <h2>Dashboard</h2>
-    
-    <!-- Filtro por Setor -->
-    <div class="card mb-4">
-        <div class="card-body">
-            <form action="admin.php" method="GET" class="row g-3 align-items-center">
-                <div class="col-auto">
-                    <label for="sector" class="col-form-label">Filtrar por Setor:</label>
-                </div>
-                <div class="col-auto">
-                    <select name="sector" id="sector" class="form-select" onchange="this.form.submit()">
-                        <option value="">-- Todos os Setores --</option>
-                        <?php foreach ($sectors as $sector): ?>
-                            <option value="<?= htmlspecialchars($sector) ?>" <?= ($selected_sector === $sector) ? 'selected' : '' ?>>
-                                <?= htmlspecialchars($sector) ?>
-                            </option>
-                        <?php endforeach; ?>
-                    </select>
-                </div>
-                <div class="col-auto">
-                    <a href="admin.php" class="btn btn-secondary">Limpar Filtro</a>
-                </div>
-            </form>
-        </div>
-    </div>
 
-    <!-- Métricas e Gráfico -->
-    <div class="row">
-        <div class="col-lg-8">
-            <div class="card mb-4">
-                <div class="card-header">Média de Pontuação por Pergunta</div>
-                <div class="card-body">
-                    <canvas id="averageScoresChart"></canvas>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-4">
-            <div class="card text-center">
-                <div class="card-header">Total de Avaliações</div>
-                <div class="card-body">
-                    <h2 class="display-4"><?= $total_submissions ?></h2>
-                </div>
-            </div>
-        </div>
-    </div>
 
     <!-- Tabela de Feedbacks -->
     <div class="card">
@@ -134,45 +85,10 @@ if (is_logged_in()) {
         </div>
     </div>
 
-    <script src="js/library/chart.umd.min.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const ctx = document.getElementById('averageScoresChart');
-            if (ctx) {
-                new Chart(ctx, {
-                    type: 'bar',
-                    data: {
-                        labels: <?= $chart_labels ?>,
-                        datasets: [{
-                            label: 'Pontuação Média',
-                            data: <?= $chart_data ?>,
-                            backgroundColor: 'rgba(0, 123, 255, 0.5)',
-                            borderColor: 'rgba(0, 123, 255, 1)',
-                            borderWidth: 1
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        scales: {
-                            y: {
-                                beginAtZero: true,
-                                max: 10 // Define o máximo da escala Y para 10
-                            }
-                        },
-                        plugins: {
-                            legend: {
-                                display: false
-                            }
-                        }
-                    }
-                });
-            }
-        });
-    </script>
+
 
 <?php
-    render_footer();
+    render_footer(['pageType' => 'admin']);
     exit; // Encerra o script para não renderizar o formulário de login abaixo
 }
 
@@ -211,5 +127,5 @@ render_header('Login - Painel Administrativo');
 </div>
 
 <?php
-render_footer();
+render_footer(['pageType' => 'admin']);
 ?>
