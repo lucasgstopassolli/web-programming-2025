@@ -1,0 +1,43 @@
+[{
+    "nome": "SeuNome",
+    "sobrenome": "SeuSobrenome",
+    "dataNascimento": null,
+    "cpfCnpj": null,
+    "tipo": null,
+    "endereco": {
+        "logradouro": "Rua X",
+        "bairro": "Centro",
+        "cidade": "Rio do Sul",
+        "estado": "SC",
+        "cep": "89160-000"
+    },
+    "contatos": [
+        {
+            "id": 1,
+            "tipo": "Celular",
+            "descricao": "47 9999-9999"
+        }
+    ]
+},{
+    "nome": "Pai",
+    "sobrenome": "Sobrenome",
+    "dataNascimento": null,
+    "cpfCnpj": null,
+    "tipo": null,
+    "endereco": {
+        "logradouro": "Rua Y",
+        "bairro": "Bairro",
+        "cidade": "Cidade",
+        "estado": "SC",
+        "cep": "00000-000"
+    },
+    "contatos": []
+},{
+    "nome": "Mãe",
+    "sobrenome": "Sobrenome",
+    "dataNascimento": null,
+    "cpfCnpj": null,
+    "tipo": null,
+    "endereco": null,
+    "contatos": []
+}]
