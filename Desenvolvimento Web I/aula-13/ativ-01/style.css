@@ -1,0 +1,44 @@
+body {
+  font-family: "Arial", sans-serif;
+  background: linear-gradient(135deg, #74abe2, #5563de);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  height: auto;
+  min-height: 100vh;
+}
+.container {
+  background-color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  width: 800px;
+  padding: 30px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+  margin: 4rem auto;
+}
+h2 {
+  text-align: center;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+/* Adicionei um estilo extra para o bloco de código (JSON/TXT) ficar bonito dentro do seu container */
+.code-block {
+  background-color: #2d2d2d;
+  color: #f8f8f2;
+  padding: 15px;
+  border-radius: 8px;
+  overflow-x: auto;
+  font-family: "Consolas", "Monaco", monospace;
+  white-space: pre-wrap; /* Quebra linha se for muito longo */
+  font-size: 13px;
+}
+.label-file {
+  font-weight: bold;
+  color: #5563de;
+  margin-top: 10px;
+}
