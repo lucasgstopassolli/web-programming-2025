@@ -29,8 +29,8 @@ Um sistema simples em PHP para criar e gerenciar pesquisas de satisfação para 
 
 1.  **Clone o repositório:**
     ```bash
-    git clone https://github.com/seu-usuario/seu-repositorio.git
-    cd seu-repositorio
+    git clone https://github.com/lucasgstopassolli/web-programming-2025/blob/main/Desenvolvimento%20Web%20I/Trabalho%20Final/
+    cd final-test
     ```
 
 2.  **Configure o Banco de Dados:**
